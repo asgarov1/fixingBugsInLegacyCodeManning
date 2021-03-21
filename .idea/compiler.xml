@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="HotspotOptimizerLibrary" />
+        <module name="SearchResults" />
+        <module name="MentorOnly" />
+        <module name="SearchService" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="HotspotOptimizerLibrary (2)" target="11" />
+      <module name="HotspotOptimizerLibrary (3)" target="11" />
+      <module name="HotspotOptimizerLibrary (4)" target="11" />
+      <module name="maven-archiver (1)" target="1.5" />
+      <module name="maven-archiver (2)" target="1.5" />
+      <module name="maven-archiver (3)" target="1.5" />
+      <module name="SearchResults (1)" target="11" />
+    </bytecodeTargetLevel>
+  </component>
+</project>
