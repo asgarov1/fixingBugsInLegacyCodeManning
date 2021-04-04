@@ -16,34 +16,41 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class BugsTests {
 
-    SearchResults searchResults;
-
-    @BeforeEach
-    public void init() {
-        searchResults = new SearchResults();
-    }
+    private final int maximumShowcaseItems = 5;
+    private SearchResults searchResults;
+    private AssetVendor partnerVendor;
+    private SearchResultHotspotOptimizer optimizer;
 
     @Test
-    public void precedingPartnerWithLongTrailingAssetsDoesNotWin() {
-        final var partnerVendor = makeVendor(Partner);
-        final int maximumShowcaseItems = 5;
-        // I don't need to track this, yet, but I like my tests to be very explanatory
-        var missing =
-                // We'll need an asset from a different partner-level vendor
-                givenAssetInResultsWithVendor(partnerVendor);
-        // This is the "salt" that makes the system work differently from how business expected
+    public void prevailingPartnerReceivesFirstFiveItemsInShowcase() {
+        // now it's no longer "missing"
+        ArrayList<Asset> expected = new ArrayList<>();
+        // so we include it in the list of expected items
+        expected.add(givenAssetInResultsWithVendor(partnerVendor));
         givenAssetInResultsWithVendor(makeVendor(Partner));
-        // This is what is actually put in the showcase box
-        var expected = givenAssetsInResultsWithVendor(maximumShowcaseItems - 1, partnerVendor);
+        expected.addAll(givenAssetsInResultsWithVendor(maximumShowcaseItems - 1, partnerVendor));
 
         whenOptimize();
 
-        thenHotspotDoesNotHave(Showcase, missing);
+        // check that everything is there
         thenHotspotHasExactly(Showcase, expected);
     }
 
+    @BeforeEach
+    public void setUp() {
+        optimizer = new SearchResultHotspotOptimizer();
+        searchResults = new SearchResults();
+        partnerVendor = makeVendor(Partner);
+    }
+
     private AssetVendor makeVendor(AssetVendorRelationshipLevel relationshipLevel) {
-        return new AssetVendor("test_id", "test_name", relationshipLevel, 0f);
+        return new AssetVendor("anything", "anything", relationshipLevel, 1);
+    }
+
+    private AssetPurchaseInfo getPurchaseInfoFromRoyaltiesAndRevenue(String royalties, String revenue) {
+        return new AssetPurchaseInfo(0, 0,
+                new Money(new BigDecimal(revenue)),
+                new Money(new BigDecimal(royalties)));
     }
 
     private Asset givenAssetInResultsWithVendor(AssetVendor vendor) {
@@ -57,9 +64,7 @@ public class BugsTests {
     }
 
     private AssetPurchaseInfo getPurchaseInfo() {
-        return new AssetPurchaseInfo(0, 0,
-                new Money(BigDecimal.valueOf(0)),
-                new Money(BigDecimal.valueOf(0)));
+        return getPurchaseInfoFromRoyaltiesAndRevenue("0", "0");
     }
 
     private void thenHotspotHasExactly(HotspotKey hotspotKey, List<Asset> expected) {
@@ -75,7 +80,6 @@ public class BugsTests {
     }
 
     private void whenOptimize() {
-        var optimizer = new SearchResultHotspotOptimizer();
         optimizer.optimize(searchResults);
     }
 

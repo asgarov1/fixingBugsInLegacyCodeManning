@@ -16,6 +16,7 @@
       <module name="HotspotOptimizerLibrary (2)" target="11" />
       <module name="HotspotOptimizerLibrary (3)" target="11" />
       <module name="HotspotOptimizerLibrary (4)" target="11" />
+      <module name="initial-uncommented" target="11" />
       <module name="maven-archiver (1)" target="1.5" />
       <module name="maven-archiver (2)" target="1.5" />
       <module name="maven-archiver (3)" target="1.5" />
